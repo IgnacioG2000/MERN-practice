@@ -1,5 +1,10 @@
+// Lo ponemos AL PRINCIPIO para que SIEMPRE requiera primero nuestras variables de entorno
+require('dotenv').config()
+
 // Traemos la app para poder utilizarlo
 const app = require('./app')
+
+require('./database')
 
 //-------------------------------------------//
 
