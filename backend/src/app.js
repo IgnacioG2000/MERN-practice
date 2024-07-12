@@ -32,5 +32,10 @@ app.get('/', (req, res)=> {
 })
 
 
+// Ruta para nuestra API de usuarios
+app.use('/api/usuarios', require('./routes/usuario'))
+
+
+
 // Este archivo de app lo exporta para que en otros lugares lo podamos usar
 module.exports = app
