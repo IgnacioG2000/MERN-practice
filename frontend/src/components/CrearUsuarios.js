@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // axios es una biblioteca de JavaScript utilizada para hacer solicitudes HTTP desde el navegador y Node.js. 
 //Es útil para interactuar con APIs, recuperar datos de servidores y enviar datos a servidores.
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const CrearUsuarios = () => {
 
@@ -13,11 +14,15 @@ const CrearUsuarios = () => {
         correo: ''
     }
 
+    let {id} = useParams();
+
     // Crear estado
-    // usuario = estado
     // setUsuario = funcion para actualizar el estado
     // useState(valorInicial) = inicializar el estado
     const [usuario, setUsuario] = React.useState(valorInicial);
+
+    // Crear estado para el id
+    const [subId, setSubId] = useState(id);
 
     // Capturar datos de los inputs
     // e = evento
@@ -51,6 +56,49 @@ const CrearUsuarios = () => {
         // Limpiar los inputs
         setUsuario({...valorInicial});
     }
+
+    // Obtener un usuario
+    // id = id del usuario
+    // response.data = datos de la peticion
+    const obtenerUno = async(id) => {
+      const response = await axios.get('http://localhost:4000/api/usuarios/' + id);
+      setUsuario({
+        nombre: response.data.nombre,
+        apellido: response.data.apellido,
+        edad: response.data.edad,
+        telefono: response.data.telefono,
+        correo: response.data.correo
+      })
+      
+    }
+
+    // Funcion para actualizar el usuario
+
+    const actualizarUsuario = async(e) => {
+      e.preventDefault();
+      const usuarioActualizado = {
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        edad: usuario.edad,
+        telefono: usuario.telefono,
+        correo: usuario.correo
+      }
+
+      await axios.put('http://localhost:4000/api/usuarios/' + subId, usuarioActualizado);
+      // Limpiar los inputs
+      setUsuario({...valorInicial});
+      // Limpiar el id
+      setSubId('');
+    }
+
+    // logica para hacer la peticion a la API
+    // useEffect = hook para realizar peticiones asincronas
+    // [] = se ejecuta una vez cuando se renderiza el componente
+    useEffect(() => {
+      if(subId !== ''){
+        obtenerUno(subId);
+      }
+    }, [subId])
 
 
     return (
@@ -130,6 +178,12 @@ const CrearUsuarios = () => {
 
             <button className="btn btn-primary form-control">Crear Usuario</button>
           </div>
+        </form>
+
+        <form onSubmit={actualizarUsuario}>
+          <button className='btn btn-danger form-control mt-2'>
+            Actualizar Usuario
+          </button>
         </form>
       </div>
     );

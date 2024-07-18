@@ -1,9 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const ListaUsuarios = () => {
 
+    // Mostrar usuarios //
 
     // useState([]) = inicializar el estado
     // [] = valor inicial del estado
@@ -21,6 +23,13 @@ const ListaUsuarios = () => {
         getUsuarios();
     }, [usuarios])
 
+    // Eliminar usuario
+    const eliminarUsuario = async(id) => {
+        await axios.delete('http://localhost:4000/api/usuarios/' + id);
+    }
+
+
+
     return (
       <div className="row">
         {usuarios.map((usuario) => (
@@ -37,9 +46,16 @@ const ListaUsuarios = () => {
               </div>
 
               <div className="card-footer">
-                <button className="btn btn-danger">Eliminar</button>
-                </div>
+                <button className="btn btn-danger" onClick={()=> eliminarUsuario(usuario._id)}>Eliminar</button>
+
+                <Link className='btn btn-primary m-1' to={'/edicionUsuario/' + usuario._id}>
+                  Editar
+                </Link>
+              </div>
+
             </div>
+
+
           </div>
         ))}
       </div>
